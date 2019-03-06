@@ -1,0 +1,129 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: rgb(232, 231, 235);
+}
+
+/* Header */
+
+.toolbar {
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+.header {
+  letter-spacing: 5px;
+  font-size: 3em !important;
+  font-weight: 100;
+  text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Left Controls */
+
+.left_control {
+  height: 100%;
+  background: #212121;
+  width: 25%;
+  position: absolute;
+  box-shadow: 10px -5px 14px -8px rgba(0, 0, 0, 0.49);
+}
+
+.backgroundContainer {
+  flex-flow: column;
+}
+
+.colorPicker {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.controlContainer {
+  padding: 7px;
+}
+
+/* Right controls */
+
+.right_control {
+  height: 100%;
+  background: #212121;
+  width: 25%;
+  position: absolute;
+  right: 0;
+  box-shadow: -8px -5px 14px -8px rgba(0, 0, 0, 0.49);
+}
+
+.addTextBtn_container {
+  background: #424242;
+  padding: 7px !important;
+}
+
+.addTextBtn {
+  background: #424242 !important;
+
+  justify-content: center !important;
+}
+
+/* Text Dialog */
+
+.textDialog {
+  height: 500px !important;
+  color: #fff;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  position: relative;
+}
+
+.textDialog h3 {
+  margin-bottom: 8px;
+}
+
+.dialogTitle {
+  text-align: center;
+  font-family: "Ubuntu";
+  letter-spacing: 3px;
+}
+
+.font-color_controls {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.color {
+  margin-top: -20px;
+  margin-bottom: 20px;
+}
+
+.fontFamily-select {
+  width: 60%;
+}
+
+.textInput {
+  width: 80%;
+}
+
+.saveBtn {
+  position: absolute;
+  bottom: -60px;
+  width: 60%;
+}
+
+/* Canvas styling  */
+
+.canvasContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+#canvas {
+  height: 350px;
+  width: 500px;
+  background: #fff;
+  border-radius: 2px;
+}
