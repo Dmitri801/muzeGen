@@ -7,24 +7,34 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Switch from "@material-ui/core/Switch";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+
 import React from "react";
 
 function TextDialog({
-  open,
+  modalOpen,
   closeDialog,
   fonts,
   fontFamilyVal,
   fontColor,
   songTitleVal,
   artistVal,
-  onTextValuesChanged
+  onTextValuesChanged,
+  onAddTextBtnClick,
+  loading,
+  threeDChecked,
+  handle3DCheck,
+  onFontFamilySelectChange
 }) {
   return (
     <Dialog
       PaperProps={{ classes: { root: "textDialog" } }}
       fullWidth
       onClose={closeDialog}
-      open={open}
+      open={modalOpen}
     >
       <DialogTitle classes={{ root: "dialogTitle" }}>Add/Edit Text</DialogTitle>
       <div className="font-color_controls">
@@ -42,7 +52,9 @@ function TextDialog({
           <Select
             name="fontFamily"
             value={fontFamilyVal}
-            onChange={e => onTextValuesChanged(e.target.name, e.target.value)}
+            onChange={e =>
+              onFontFamilySelectChange(e.target.name, e.target.value)
+            }
           >
             <MenuItem value="">
               <em>None</em>
@@ -68,6 +80,7 @@ function TextDialog({
         value={songTitleVal}
         variant="outlined"
         onChange={e => onTextValuesChanged(e.target.name, e.target.value)}
+        onKeyPress={e => (e.key === "Enter" ? onAddTextBtnClick() : null)}
       />
       <TextField
         name="artistVal"
@@ -78,17 +91,43 @@ function TextDialog({
         variant="outlined"
         value={artistVal}
         onChange={e => onTextValuesChanged(e.target.name, e.target.value)}
+        onKeyPress={e => (e.key === "Enter" ? onAddTextBtnClick() : null)}
       />
-
-      <Button
-        variant="raised"
-        color="primary"
-        size="large"
-        classes={{ root: "saveBtn" }}
-      >
-        <SaveIcon />
-        Save
-      </Button>
+      <div className="saveBtnContainer">
+        <span className="switchContainer">
+          <span>3D</span>
+          <Switch
+            value="3D"
+            color="primary"
+            checked={threeDChecked}
+            onChange={handle3DCheck}
+          />
+        </span>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          classes={{ root: "saveBtn" }}
+          onClick={() => onAddTextBtnClick()}
+          disabled={loading}
+        >
+          <SaveIcon />
+          Save
+        </Button>
+        {loading && (
+          <CircularProgress size={50} classes={{ root: "saveBtnLoader" }} />
+        )}
+      </div>
+      <Paper classes={{ root: "fontSampler" }} elevation={0}>
+        <Typography
+          style={{ fontFamily: fontFamilyVal }}
+          align="center"
+          id="fontFamSample"
+          variant="h6"
+        >
+          {fontFamilyVal}
+        </Typography>
+      </Paper>
     </Dialog>
   );
 }

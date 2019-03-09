@@ -45,6 +45,28 @@ body {
   padding: 7px;
 }
 
+.expansionContainer {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Image */
+.sizeRadioContainer {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
+}
+
+.dropZone {
+  border: 2px dotted grey;
+  padding: 12px;
+  color: #fff;
+}
+
+.dropZone p {
+  text-align: center;
+}
+
 /* Right controls */
 
 .right_control {
@@ -65,6 +87,38 @@ body {
   background: #424242 !important;
 
   justify-content: center !important;
+}
+
+.resetBtn_container {
+  background: #cc3232;
+  padding: 7px !important;
+  transition: 0.2s;
+}
+
+.resetBtn {
+  background: #d32f2f !important;
+  justify-content: center !important;
+}
+
+.resetBtn_container:hover > .resetBtn,
+.resetBtn_container:hover {
+  background: #b42424 !important;
+}
+
+.downloadBtn {
+  width: 80px !important;
+  height: 80px !important;
+}
+
+.downloadBtn svg {
+  width: 45px;
+  height: 45px;
+}
+
+.download-container {
+  position: absolute;
+  margin-left: -40px;
+  bottom: 30%;
 }
 
 /* Text Dialog */
@@ -106,11 +160,35 @@ body {
 .textInput {
   width: 80%;
 }
-
+.saveBtnContainer {
+  position: relative;
+  width: 80%;
+  margin-top: 10px;
+  display: flex;
+}
+.switchContainer {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  margin-left: -20px;
+}
 .saveBtn {
+  width: 100%;
+  height: 50px;
+}
+
+.saveBtnLoader {
   position: absolute;
-  bottom: -60px;
-  width: 60%;
+  right: 40%;
+  bottom: 12px;
+}
+
+.fontSampler {
+  position: absolute;
+  bottom: 25px;
+  padding: 20px;
+  background: #555 !important;
+  width: 50%;
 }
 
 /* Canvas styling  */
