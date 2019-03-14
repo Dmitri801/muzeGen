@@ -1,66 +1,72 @@
-export const testerDraw = (canvas, ctx, width, height) => {
+import Pica from "pica";
+const pica = Pica();
+
+export const testerDraw = (canvas, ctx, imgCtx, width, height, imgSrc) => {
+  const img = new Image();
+  img.src = imgSrc;
+
+  img.onload = function() {
+    pica
+      .resize(img, canvas, {
+        unsharpAmount: 80,
+        alpha: true
+      })
+      .then(result => {
+        console.log(result);
+      })
+      .then(() => {
+        console.log("ay");
+      });
+  };
   console.log("Tester");
 };
 
-export const drawImage = (ctx, imgSrc, args, effect) => {
+export const drawImage = (ctx, imgSrc, args, effect, canvas) => {
   if (imgSrc !== "") {
     const img = new Image();
     img.src = imgSrc;
-    switch (effect) {
-      case "none":
-        img.onload = function() {
-          ctx.drawImage(img, ...args);
-        };
-        break;
-      case "neon":
-        img.onload = function() {
-          ctx.drawImage(img, ...args);
-          const imageData = ctx.getImageData(...args);
-          for (let i = 0; i < imageData.data.length; i += 4) {
-            imageData.data[i] = 0; // Red
-          }
-          const filterArgs = [args[0], args[1]];
 
-          ctx.putImageData(imageData, ...filterArgs);
-        };
-        break;
-      case "negative":
-        img.onload = function() {
-          ctx.drawImage(img, ...args);
-          const imageData = ctx.getImageData(...args);
-          for (let i = 0; i < imageData.data.length; i += 4) {
-            imageData.data[i] = 255 - imageData.data[i]; // Red
-            imageData.data[i + 1] = 255 - imageData.data[i + 1]; // Green
-            imageData.data[i + 2] = 255 - imageData.data[i + 2]; // Blue
-          }
-          const filterArgs = [args[0], args[1]];
+    img.onload = function() {
+      addShadow(ctx);
+      if (img.naturalWidth > img.naturalHeight + 200) {
+        if (args.width > 399) {
+          canvas.width = args.width + 150;
+          // canvas.style.left = `${args.left - 80}px`;
+          // canvas.style.top = `${args.top - 20}px`;
+        } else {
+          canvas.width = args.width + 100;
+          // canvas.style.left = `${args.left - 50}px`;
+          // canvas.style.top = `${args.top - 20}px`;
+        }
 
-          ctx.putImageData(imageData, ...filterArgs);
-        };
-        break;
-      case "sinCity":
-        img.onload = function() {
-          ctx.drawImage(img, ...args);
-          const imageData = ctx.getImageData(...args);
-          for (let i = 0; i < imageData.data.length; i += 4) {
-            const average =
-              imageData.data[i] +
-              imageData.data[i + 1] +
-              imageData.data[i + 2] / 3;
-            imageData.data[i] = average; // Red
-            imageData.data[i + 1] = average; // Green
-            imageData.data[i + 2] = average; // Blue
-          }
-          const filterArgs = [args[0], args[1]];
+        pica
+          .resize(img, canvas, {
+            alpha: true
+          })
+          .then(result => {
+            console.log(result);
+          })
+          .then(() => {
+            console.log("ay");
+            removeShadow(ctx);
+          });
+      } else {
+        canvas.width = args.width;
+        // canvas.style.left = `${args.left}px`;
+        // canvas.style.top = `${args.top}px`;
+        pica
+          .resize(img, canvas, {
+            alpha: true
+          })
+          .then(result => {
+            console.log(result);
+          })
+          .then(() => {
+            console.log("ay");
+          });
+      }
+    };
 
-          ctx.putImageData(imageData, ...filterArgs);
-        };
-        break;
-      default:
-        img.onload = function() {
-          ctx.drawImage(img, ...args);
-        };
-    }
     img.onerror = function() {
       console.log("Error loading image");
     };
@@ -97,66 +103,94 @@ export const drawRadialBackground = (
 
 export const drawLinearBackground = (
   ctx,
+  mode,
   gradiantArgs,
   gradientOne,
-  gradientTwo
+  gradientTwo,
+  gradientThree
 ) => {
-  const linearGradient = ctx.createLinearGradient(...gradiantArgs);
-  ctx.fillStyle = linearGradient;
-  linearGradient.addColorStop(0, gradientOne);
-  linearGradient.addColorStop(1, gradientTwo);
-  ctx.fill();
+  if (mode.name === "Mode Four") {
+    const linearGradient = ctx.createLinearGradient(...gradiantArgs);
+    ctx.fillStyle = linearGradient;
+    linearGradient.addColorStop(0, gradientOne);
+    linearGradient.addColorStop(0.5, gradientTwo);
+    linearGradient.addColorStop(1, gradientThree);
+    ctx.fill();
+  } else {
+    const linearGradient = ctx.createLinearGradient(...gradiantArgs);
+    ctx.fillStyle = linearGradient;
+    linearGradient.addColorStop(0, gradientOne);
+    linearGradient.addColorStop(1, gradientTwo);
+    ctx.fill();
+  }
 };
 
 export const drawText = (
+  canvas,
   ctx,
   fontColor,
   fontFamily,
   songTitleVal,
   artistVal
 ) => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = fontColor;
-  ctx.strokeStyle = fontColor;
-
-  ctx.font = `normal bolder 54px ${fontFamily}`;
-  ctx.fillText(songTitleVal, 20, 50, 300);
-  ctx.font = `normal bolder 38px ${fontFamily}`;
-  ctx.strokeText(artistVal, 180, 320, 140);
+  ctx.textAlign = "center";
+  ctx.font = `normal bolder 58px ${fontFamily}`;
+  ctx.fillText(songTitleVal, canvas.width / 2, 420, 300);
+  ctx.font = `normal 42px ${fontFamily}`;
+  ctx.fillText(artistVal, canvas.width / 2, 40, 140);
 };
 
 export const drawText3D = (
+  canvas,
   ctx,
   fontColor,
   fontFamily,
   songTitleVal,
   artistVal
 ) => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   let threeDColor = "rgba(0, 0, 0, 1)";
-
-  ctx.font = `normal bolder 54px ${fontFamily}`;
+  ctx.textAlign = "center";
+  ctx.font = `normal bolder 58px ${fontFamily}`;
   // Layer 1
   ctx.fillStyle = threeDColor;
-  ctx.fillText(songTitleVal, 19, 49, 300);
+  ctx.fillText(songTitleVal, canvas.width / 2 - 1, 419, 300);
   // Layer 2
-  ctx.fillText(songTitleVal, 18, 48, 300);
+  ctx.fillText(songTitleVal, canvas.width / 2 - 2, 418, 300);
   // Layer 3
-  ctx.fillText(songTitleVal, 17, 47, 300);
+  ctx.fillText(songTitleVal, canvas.width / 2 - 3, 417, 300);
   // Layer 4
-  ctx.fillText(songTitleVal, 16, 46, 300);
+  ctx.fillText(songTitleVal, canvas.width / 2 - 4, 416, 300);
 
   ctx.fillStyle = fontColor;
-  ctx.fillText(songTitleVal, 20, 50, 300);
+  ctx.fillText(songTitleVal, canvas.width / 2, 420, 300);
 
   ctx.font = `normal bolder 38px ${fontFamily}`;
-  ctx.strokeStyle = threeDColor;
-  ctx.strokeText(artistVal, 179, 319, 140);
-  ctx.strokeText(artistVal, 178, 318, 140);
+  ctx.fillStyle = threeDColor;
+  ctx.fillText(artistVal, canvas.width / 2 - 1, 39, 140);
+  ctx.fillText(artistVal, canvas.width / 2 - 2, 38, 140);
 
-  ctx.strokeStyle = fontColor;
-  ctx.strokeText(artistVal, 180, 320, 140);
+  ctx.fillStyle = fontColor;
+  ctx.fillText(artistVal, canvas.width / 2, 40, 140);
 };
 
-export const saveCanvasAsImage = (canvas, songTitle) => {
+export const saveCanvasAsImage = (
+  canvas,
+  imgCanvas,
+  txtCanvas,
+  txtCtx,
+  ctx,
+  imgCtx,
+  songTitle,
+  sizeArgs
+) => {
+  console.log(sizeArgs);
+  ctx.drawImage(imgCanvas, sizeArgs.left, sizeArgs.top);
+
+  ctx.drawImage(txtCanvas, 0, 0);
+
   let e;
 
   const link = document.createElement("a");
@@ -169,6 +203,20 @@ export const saveCanvasAsImage = (canvas, songTitle) => {
   e = new MouseEvent("click");
 
   link.dispatchEvent(e);
-
-  // window.location.href = dataURL;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  imgCtx.clearRect(0, 0, imgCanvas.width, imgCanvas.height);
 };
+
+function addShadow(ctx) {
+  ctx.shadowOffsetX = 3;
+  ctx.shadowOffsetY = 3;
+  ctx.shadowColor = "black";
+  ctx.shadowBlur = 10;
+}
+
+function removeShadow(ctx) {
+  ctx.shadowOffsetX = 3;
+  ctx.shadowOffsetY = 3;
+  ctx.shadowColor = "black";
+  ctx.shadowBlur = 10;
+}

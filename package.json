@@ -5,12 +5,16 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
+    "@material-ui/lab": "^3.0.0-alpha.30",
     "axios": "^0.18.0",
     "caman": "^4.1.2",
+    "hermite-resize": "git+https://github.com/viliusle/Hermite-resize.git",
+    "pica": "^5.0.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-dropzone": "^10.0.0",
     "react-scripts": "2.1.5",
+    "react-spring": "^8.0.15",
     "webfontloader": "^1.6.28"
   },
   "scripts": {

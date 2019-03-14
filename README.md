@@ -15,3 +15,7 @@
 ## Running the app
 
 `npm start`
+
+## NOTES
+
+- gradeint creater link - http://victorblog.com/html5-canvas-gradient-creator/

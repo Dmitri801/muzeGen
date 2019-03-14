@@ -50,6 +50,109 @@ body {
   margin-bottom: 0 !important;
 }
 
+.sliderContainer {
+  margin-top: 20px;
+  color: #fff;
+}
+
+.slider-div {
+  display: flex;
+}
+
+.slider-div span {
+  margin-left: auto;
+  margin-top: -15px;
+  font-variant-numeric: tabular-nums;
+  background: #333;
+  padding: 5px;
+  width: 20%;
+  border-radius: 5px;
+}
+
+.slider {
+  width: 70% !important;
+}
+
+.positionContainer {
+  display: flex;
+  flex-flow: column;
+  height: 130px;
+  justify-content: space-evenly;
+}
+
+.position .label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.browseBtn .imgContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  width: 100%;
+  overflow: hidden;
+}
+.browseBtn .imgContainer .bgImage {
+  background: url("assets/djin.jpg");
+  background-size: cover;
+  background-position: bottom;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: overlay;
+  transition: 0.5s !important;
+}
+
+.browseBtn .imgContainer span {
+  padding: 10px;
+  color: #fff;
+  position: absolute;
+  font-size: 2em;
+  width: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.browseBtn .imgContainer span:after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -3px;
+  margin: 0 auto;
+  padding-top: 20px;
+  width: 50%;
+  border-bottom: 2px solid white;
+}
+
+.browseBtn .imgContainer:hover > .bgImage {
+  background-color: transparent;
+  transform: scale(1.1) rotate(5deg);
+}
+
+.browseBtn .imgContainer:hover > span {
+  border: 4px solid white;
+}
+
+/* Centering slider control */
+/* AS slider increases
+  trackAfter scaleX goes down by 1
+  trackBefore scaleX goes up by 1
+  thumbWrapper translateX increases by 10%
+
+  trackBefore scaleY
+  if(position < target) 
+  scaleY(0)
+  else 
+  scaleY(1)
+*/
+/* Default */
+
 /* Image */
 .sizeRadioContainer {
   display: flex;
@@ -193,15 +296,34 @@ body {
 
 /* Canvas styling  */
 
-.canvasContainer {
+.main {
   display: flex;
   justify-content: center;
+
   margin-top: 100px;
 }
 
+.canvasContainer {
+  position: relative;
+  overflow: hidden;
+}
+
 #canvas {
-  height: 350px;
-  width: 500px;
+  height: 450px;
+  width: 450px;
   background: #fff;
   border-radius: 2px;
+}
+
+#imgCanvas {
+  position: absolute;
+  background: transparent;
+}
+
+#txtCanvas {
+  position: absolute;
+  background: transparent !important;
+  top: 0;
+  left: 0;
+  /* display: none; */
 }

@@ -10,6 +10,8 @@ import {
   saveCanvasAsImage
 } from "../utils/canvasHelpers";
 
+// const imgSrc = require("../assets/ditreez.png");
+
 class Canvas extends Component {
   componentDidMount() {
     const {
@@ -19,7 +21,8 @@ class Canvas extends Component {
     } = this.props.canvasState.backgroundColor;
     // const imgSrc = require("../assets/regularshow.png");
     this.ctx = this.canvas.getContext("2d");
-    // const boundings = this.canvas.getBoundingClientRect();
+    this.imgCtx = this.imgCanvas.getContext("2d");
+    this.txtCtx = this.txtCanvas.getContext("2d");
 
     this.radialGradient = this.ctx.createRadialGradient(...mode.gradiantArgs);
 
@@ -37,28 +40,82 @@ class Canvas extends Component {
     const {
       gradientOne,
       gradientTwo,
+      gradientThree,
       mode
     } = this.props.canvasState.backgroundColor;
-    const { textSaved, songTitleVal } = this.props.canvasState.text;
+    const {
+      textSaved,
+      songTitleVal,
+      threeD,
+      fontColor,
+      fontFamily,
+      artistVal
+    } = this.props.canvasState.text;
     const { imgPath, size, effect } = this.props.canvasState.image;
     if (
       prevProps.canvasState.reset !== this.props.canvasState.reset &&
       this.props.canvasState.reset
     ) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.imgCtx.clearRect(0, 0, this.imgCanvas.width, this.imgCanvas.height);
       this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+      this.imgCtx.rect(0, 0, this.imgCanvas.width, this.imgCanvas.height);
+      this.txtCtx.clearRect(0, 0, this.txtCanvas.width, this.txtCanvas.height);
     }
     if (
       prevProps.canvasState.downloadToPng !==
         this.props.canvasState.downloadToPng &&
       this.props.canvasState.downloadToPng
     ) {
-      saveCanvasAsImage(this.canvas, songTitleVal);
+      drawImage(this.imgCtx, imgPath, size.args, effect, this.imgCanvas);
+      threeD
+        ? drawText3D(
+            this.canvas,
+            this.txtCtx,
+            fontColor,
+            fontFamily,
+            songTitleVal,
+            artistVal
+          )
+        : drawText(
+            this.canvas,
+            this.txtCtx,
+            fontColor,
+            fontFamily,
+            songTitleVal,
+            artistVal
+          );
+      if (mode.name === "Mode One" || mode.name === "Mode Three") {
+        saveCanvasAsImage(
+          this.canvas,
+          this.imgCanvas,
+          this.txtCanvas,
+          this.txtCtx,
+          this.ctx,
+          this.imgCtx,
+          songTitleVal,
+          size.args
+        );
+        this.drawCanvasRadial();
+      } else {
+        saveCanvasAsImage(
+          this.canvas,
+          this.imgCanvas,
+          this.txtCanvas,
+          this.txtCtx,
+          this.ctx,
+          this.imgCtx,
+          songTitleVal,
+          size.args
+        );
+        this.drawCanvasLinear();
+      }
       console.log("Saved");
     }
     if (
       prevProps.canvasState.backgroundColor.gradientOne !== gradientOne ||
       prevProps.canvasState.backgroundColor.gradientTwo !== gradientTwo ||
+      prevProps.canvasState.backgroundColor.gradientThree !== gradientThree ||
       prevProps.canvasState.backgroundColor.mode.name !== mode.name
     ) {
       if (mode.name === "Mode Four" || mode.name === "Mode Two") {
@@ -70,18 +127,20 @@ class Canvas extends Component {
       prevProps.canvasState.text.textSaved !== textSaved &&
       textSaved === true
     ) {
-      this.props.onAddedTextSave(this.ctx, this.canvas);
+      this.props.onAddedTextSave(
+        this.txtCtx,
+        this.canvas,
+        this.imgCtx,
+        this.imgCanvas
+      );
     } else if (prevProps.canvasState.image.imgPath !== imgPath) {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
-      if (mode.name === "Mode Four" || mode.name === "Mode Two") {
-        this.drawCanvasLinear();
-      } else {
-        this.drawCanvasRadial();
-      }
+      this.imgCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.imgCtx.rect(0, 0, this.canvas.width, this.canvas.height);
+      drawImage(this.imgCtx, imgPath, size.args, effect, this.imgCanvas);
     } else if (prevProps.canvasState.image.size.name !== size.name) {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+      drawImage(this.imgCtx, imgPath, size.args, effect, this.imgCanvas);
       if (mode.name === "Mode Four" || mode.name === "Mode Two") {
         this.drawCanvasLinear();
       } else {
@@ -93,6 +152,13 @@ class Canvas extends Component {
       } else {
         this.drawCanvasRadial();
       }
+    } else if (
+      prevProps.canvasState.backgroundColor.mode.sliderValue !==
+      mode.sliderValue
+    ) {
+      setTimeout(() => {
+        this.drawCanvasLinear();
+      }, 20);
     }
   }
 
@@ -100,23 +166,22 @@ class Canvas extends Component {
     const {
       gradientOne,
       gradientTwo,
+      gradientThree,
       mode
     } = this.props.canvasState.backgroundColor;
-    const {
-      fontFamily,
-      fontColor,
-      songTitleVal,
-      artistVal,
-      threeD
-    } = this.props.canvasState.text;
-    const { imgPath, size, effect } = this.props.canvasState.image;
-    drawLinearBackground(this.ctx, mode.gradiantArgs, gradientOne, gradientTwo);
-    drawImage(this.ctx, imgPath, size.args, effect);
-    setTimeout(() => {
-      threeD
-        ? drawText3D(this.ctx, fontColor, fontFamily, songTitleVal, artistVal)
-        : drawText(this.ctx, fontColor, fontFamily, songTitleVal, artistVal);
-    }, 50);
+
+    const linearArgsArr = [];
+    for (let key in mode.linearArgs) {
+      linearArgsArr.push(mode.linearArgs[key]);
+    }
+    drawLinearBackground(
+      this.ctx,
+      mode,
+      linearArgsArr,
+      gradientOne,
+      gradientTwo,
+      gradientThree
+    );
   };
 
   drawCanvasRadial = () => {
@@ -125,35 +190,44 @@ class Canvas extends Component {
       gradientTwo,
       mode
     } = this.props.canvasState.backgroundColor;
-    const {
-      fontFamily,
-      fontColor,
-      songTitleVal,
-      artistVal,
-      threeD
-    } = this.props.canvasState.text;
-    const { imgPath, size, effect } = this.props.canvasState.image;
 
     drawRadialBackground(this.ctx, mode.gradiantArgs, gradientOne, gradientTwo);
-    drawImage(this.ctx, imgPath, size.args, effect);
-    setTimeout(() => {
-      threeD
-        ? drawText3D(this.ctx, fontColor, fontFamily, songTitleVal, artistVal)
-        : drawText(this.ctx, fontColor, fontFamily, songTitleVal, artistVal);
-    }, 50);
   };
 
   render() {
+    const { width, height, top, left } = this.props.canvasState.image.size.args;
     return (
-      <main className="canvasContainer">
-        <canvas
-          height={350}
-          width={500}
-          ref={ref => (this.canvas = ref)}
-          id="canvas"
-        >
-          YOUR BROWSER DOESN'T SUPPORT THIS FEATURE :(
-        </canvas>
+      <main className="main">
+        <div className="canvasContainer">
+          <canvas
+            height={450}
+            width={450}
+            ref={ref => (this.canvas = ref)}
+            id="canvas"
+          >
+            YOUR BROWSER DOESN'T SUPPORT THIS FEATURE :(
+          </canvas>
+          <canvas
+            style={{
+              top: `${top}px`,
+              left: `${left}px`
+            }}
+            height={height}
+            width={width}
+            id="imgCanvas"
+            ref={ref => (this.imgCanvas = ref)}
+          >
+            YOUR BROWSER DOESN'T SUPPORT THIS FEATURE :(
+          </canvas>
+          <canvas
+            height={450}
+            width={450}
+            id="txtCanvas"
+            ref={ref => (this.txtCanvas = ref)}
+          >
+            YOUR BROWSER DOESN'T SUPPORT THIS FEATURE :(
+          </canvas>
+        </div>
       </main>
     );
   }

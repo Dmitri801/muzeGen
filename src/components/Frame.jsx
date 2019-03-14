@@ -10,10 +10,13 @@ function Frame(props) {
         canvasState={props.canvasState}
         onGradientOneChange={props.onGradientOneChange}
         onGradientTwoChange={props.onGradientTwoChange}
+        onGradientThreeChange={props.onGradientThreeChange}
         onBackgroundModeChange={props.onBackgroundModeChange}
         onImgSizeChange={props.onImgSizeChange}
         addImageUrl={props.addImageUrl}
         onEffectChange={props.onEffectChange}
+        setLinearVal={props.setLinearVal}
+        imagePositionChange={props.imagePositionChange}
       />
       <RightControl
         text={props.canvasState.text}
