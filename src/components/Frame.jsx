@@ -17,6 +17,17 @@ function Frame(props) {
         onEffectChange={props.onEffectChange}
         setLinearVal={props.setLinearVal}
         imagePositionChange={props.imagePositionChange}
+        unsplashAPI={props.unsplashAPI}
+        unsplashResults={props.unsplashResults}
+        unsplashQuery={props.unsplashQuery}
+        unsplashQueryChange={props.unsplashQueryChange}
+        setUnsplashResults={props.setUnsplashResults}
+        setUnsplashPage={props.setUnsplashPage}
+        selectUnsplashImage={props.selectUnsplashImage}
+        addImagePathUnsplash={props.addImagePathUnsplash}
+        onBackgroundImageSelect={props.onBackgroundImageSelect}
+        setBackgroundImageOpacity={props.setBackgroundImageOpacity}
+        setBackgroundModeUnsplash={props.setBackgroundModeUnsplash}
       />
       <RightControl
         text={props.canvasState.text}

@@ -13,10 +13,20 @@ import {
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { GOOGLE_FONTS_KEY } from "./keys/keys";
 import "./main.css";
+import Unsplash from "unsplash-js";
+import { UNSPLASH_ACCESS_KEY, UNSPLASH_SECRET_KEY } from "./keys/keys";
+
+const unsplash = new Unsplash({
+  applicationId: UNSPLASH_ACCESS_KEY,
+  secret: UNSPLASH_SECRET_KEY,
+  headers: {
+    Authorization: UNSPLASH_ACCESS_KEY
+  }
+});
 class App extends Component {
   state = {
     loading: false,
-    loadingCompleted: 100,
+    loadingCompleted: 0,
     backgroundColor: {
       gradientOne: "#ffffff",
       gradientTwo: "#ffffff",
@@ -28,6 +38,14 @@ class App extends Component {
         sliderValue: null,
         degrees: null
       }
+    },
+    backgroundImage: {
+      imgPath: "",
+      mode: {
+        name: "none"
+      },
+      opacity: 1,
+      images: []
     },
     text: {
       fonts: [],
@@ -49,8 +67,8 @@ class App extends Component {
           height: 300,
           top: 65,
           left: 75,
-          sliderPositionX: 5,
-          sliderPositionY: 5,
+          sliderPositionX: 10,
+          sliderPositionY: 10,
           positionChange: false
         }
       },
@@ -61,15 +79,24 @@ class App extends Component {
         offsetY: 3,
         shadowColor: "#000000",
         shadowBlur: 10
+      },
+      unsplash: {
+        query: "music",
+        results: [],
+        selectedImg: null,
+        pageNum: 1,
+        totalPages: null,
+        backgroundMode: false
       }
     },
     reset: false,
     downloadToPng: false
   };
 
-  // API call to google fonts
+  // API call to google fonts and unsplash - INIT
 
   componentDidMount() {
+    const { query, pageNum } = this.state.image.unsplash;
     this.setState({
       ...this.state,
       loading: true
@@ -84,13 +111,32 @@ class App extends Component {
         );
         this.setState({
           ...this.state,
-
-          loading: false,
-          text: {
-            ...this.state.text,
-            fonts: popularFonts
-          }
+          loadingCompleted: 90
         });
+        unsplash.search
+          .photos(query, pageNum)
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            this.setState({
+              ...this.state,
+
+              loading: false,
+              loadingCompleted: 100,
+              text: {
+                ...this.state.text,
+                fonts: popularFonts
+              },
+              image: {
+                ...this.state.image,
+                unsplash: {
+                  ...this.state.image.unsplash,
+                  results: data.results,
+                  totalPages: data.total_pages
+                }
+              }
+            });
+          });
       });
   }
 
@@ -378,6 +424,29 @@ class App extends Component {
     }
   };
 
+  onBackgroundImageSelect = value => {
+    this.setState({
+      ...this.state,
+      backgroundImage: {
+        ...this.state.backgroundImage,
+        mode: {
+          ...this.state.backgroundImage.mode,
+          name: value
+        }
+      }
+    });
+  };
+
+  setBackgroundImageOpacity = (event, value) => {
+    this.setState({
+      ...this.state,
+      backgroundImage: {
+        ...this.state.backgroundImage,
+        opacity: value
+      }
+    });
+  };
+
   // Text
   onTextValuesChanged = (name, value) => {
     this.setState({
@@ -596,8 +665,8 @@ class App extends Component {
                 width: 400,
                 top: 25,
                 left: 25,
-                sliderPositionX: 5,
-                sliderPositionY: 5
+                sliderPositionX: 10,
+                sliderPositionY: 10
               }
             }
           }
@@ -615,8 +684,8 @@ class App extends Component {
                 width: 300,
                 top: 65,
                 left: 75,
-                sliderPositionX: 5,
-                sliderPositionY: 5
+                sliderPositionX: 10,
+                sliderPositionY: 10
               }
             }
           }
@@ -634,8 +703,8 @@ class App extends Component {
                 width: 200,
                 top: 110,
                 left: 125,
-                sliderPositionX: 5,
-                sliderPositionY: 5
+                sliderPositionX: 10,
+                sliderPositionY: 10
               }
             }
           }
@@ -653,8 +722,8 @@ class App extends Component {
                 width: 170,
                 top: 130,
                 left: 140,
-                sliderPositionX: 5,
-                sliderPositionY: 5
+                sliderPositionX: 10,
+                sliderPositionY: 10
               }
             }
           }
@@ -669,12 +738,12 @@ class App extends Component {
     const { sliderPositionX, sliderPositionY } = this.state.image.size.args;
     const { name } = this.state.image.size;
 
-    let leftVal = 20;
-    let topVal = 20;
+    let leftVal = 10;
+    let topVal = 10;
 
     if (name === "xlarge") {
-      leftVal = 25;
-      topVal = 25;
+      leftVal = 15;
+      topVal = 15;
     }
 
     if (coordinate === "x") {
@@ -744,20 +813,36 @@ class App extends Component {
     }
   };
 
-  addImageUrl = imgPath => {
-    this.setState(
-      {
+  addImageUrl = (imgPath, backgroundBool) => {
+    if (!backgroundBool) {
+      this.setState(
+        {
+          ...this.state,
+          image: {
+            ...this.state.image,
+            imgPath: imgPath
+          }
+        },
+        () => {
+          const { name } = this.state.image.size;
+          this.onImgSizeChange(name);
+        }
+      );
+    } else {
+      this.setState(prevState => ({
         ...this.state,
-        image: {
-          ...this.state.image,
+        backgroundImage: {
+          ...this.state.backgroundImage,
+          mode: {
+            name:
+              prevState.backgroundImage.mode.name === "none"
+                ? "cover"
+                : prevState.backgroundImage.mode.name
+          },
           imgPath: imgPath
         }
-      },
-      () => {
-        const { name } = this.state.image.size;
-        this.onImgSizeChange(name);
-      }
-    );
+      }));
+    }
   };
 
   onEffectChange = value => {
@@ -768,6 +853,128 @@ class App extends Component {
         effect: value
       }
     });
+  };
+
+  // Background Image
+  addImageBackground = (imgSrc, opacity) => {
+    const imgObject = {
+      src: imgSrc,
+      opacity
+    };
+
+    this.setState({
+      ...this.state,
+      backgroundImage: {
+        ...this.state.backgroundImage,
+        images: [...this.state.backgroundImage.images, imgObject]
+      }
+    });
+  };
+
+  // Unsplash
+
+  setBackgroundModeUnsplash = bool => {
+    this.setState({
+      ...this.state,
+      image: {
+        ...this.state.image,
+        unsplash: {
+          ...this.state.image.unsplash,
+          backgroundMode: bool
+        }
+      }
+    });
+  };
+
+  selectUnsplashImage = id => {
+    this.setState({
+      ...this.state,
+      image: {
+        ...this.state.image,
+        unsplash: {
+          ...this.state.image.unsplash,
+          selectedImg: id
+        }
+      }
+    });
+  };
+
+  unsplashQueryChange = (value, loadingMore) => {
+    this.setState({
+      ...this.state,
+      image: {
+        ...this.state.image,
+        unsplash: {
+          ...this.state.image.unsplash,
+          query: value
+        }
+      }
+    });
+  };
+
+  setUnsplashResults = (results, loadingMore) => {
+    if (loadingMore) {
+      this.setState(prevState => ({
+        ...this.state,
+        image: {
+          ...this.state.image,
+          unsplash: {
+            ...this.state.image.unsplash,
+            results: [...prevState.image.unsplash.results, ...results]
+          }
+        }
+      }));
+    } else {
+      this.setState({
+        ...this.state,
+        image: {
+          ...this.state.image,
+          unsplash: {
+            ...this.state.image.unsplash,
+            results: results
+          }
+        }
+      });
+    }
+  };
+
+  selectUnsplashImage = id => {
+    this.setState({
+      ...this.state,
+      image: {
+        ...this.state.image,
+        unsplash: {
+          ...this.state.image.unsplash,
+          selectedImg: id
+        }
+      }
+    });
+  };
+
+  addImagePathUnsplash = (url, backgroundBool) => {
+    if (backgroundBool) {
+      this.setState(prevState => ({
+        ...this.state,
+        backgroundImage: {
+          ...this.state.backgroundImage,
+          mode: {
+            name:
+              prevState.backgroundImage.mode.name === "none"
+                ? "cover"
+                : prevState.backgroundImage.mode.name
+          },
+          imgPath: url
+        }
+      }));
+    } else {
+      this.setState({
+        ...this.state,
+        image: {
+          ...this.state.image,
+          imgPath: url
+        }
+      });
+    }
   };
 
   // Reset
@@ -809,10 +1016,14 @@ class App extends Component {
               height: 300,
               top: 65,
               left: 75,
-              sliderPositionX: 5,
-              sliderPositionY: 5,
+              sliderPositionX: 10,
+              sliderPositionY: 10,
               positionChange: false
             }
+          },
+          unsplash: {
+            ...this.state.image.unsplash,
+            selectedImg: null
           },
           effect: "none",
           opacity: null
@@ -848,6 +1059,8 @@ class App extends Component {
 
   render() {
     const { loading, loadingCompleted } = this.state;
+    const unsplashResults = this.state.image.unsplash.results;
+    const unsplashQuery = this.state.image.unsplash.query;
 
     return loading ? (
       <LinearProgress variant="determinate" value={loadingCompleted} />
@@ -873,10 +1086,22 @@ class App extends Component {
         triggerCanvasDownload={this.triggerCanvasDownload}
         setLinearVal={this.setLinearVal}
         imagePositionChange={this.imagePositionChange}
+        unsplashAPI={unsplash}
+        unsplashResults={unsplashResults}
+        unsplashQuery={unsplashQuery}
+        unsplashQueryChange={this.unsplashQueryChange}
+        setUnsplashResults={this.setUnsplashResults}
+        setUnsplashPage={this.setUnsplashPage}
+        selectUnsplashImage={this.selectUnsplashImage}
+        addImagePathUnsplash={this.addImagePathUnsplash}
+        onBackgroundImageSelect={this.onBackgroundImageSelect}
+        setBackgroundImageOpacity={this.setBackgroundImageOpacity}
+        setBackgroundModeUnsplash={this.setBackgroundModeUnsplash}
       >
         <Canvas
           canvasState={this.state}
           onAddedTextSave={this.onAddedTextSave}
+          addImageBackground={this.addImageBackground}
         />
       </Frame>
     );

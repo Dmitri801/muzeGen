@@ -12,9 +12,10 @@ import InsertPhoto from "@material-ui/icons/AddPhotoAlternate";
 import ColorLens from "@material-ui/icons/ColorLens";
 import Slider from "@material-ui/lab/Slider";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Button from "@material-ui/core/Button";
 import { useSpring, animated } from "react-spring";
 import Dropzone from "./DropZone";
-
+import Unsplash from "./Unsplash";
 function LeftControl({
   canvasState,
   onGradientOneChange,
@@ -24,12 +25,29 @@ function LeftControl({
   onImgSizeChange,
   addImageUrl,
   imagePositionChange,
-  setLinearVal
+  setLinearVal,
+  unsplashAPI,
+  unsplashQuery,
+  unsplashResults,
+  unsplashQueryChange,
+  setUnsplashResults,
+  setUnsplashPage,
+  selectUnsplashImage,
+  addImagePathUnsplash,
+  onBackgroundImageSelect,
+  setBackgroundImageOpacity,
+  setBackgroundModeUnsplash
 }) {
   const { mode } = canvasState.backgroundColor;
   const { size, imgPath } = canvasState.image;
+  const { backgroundImage } = canvasState;
 
   const [expanded, setExpanded] = useState(null);
+  const [unsplashOpen, setUnsplashOpen] = useState(false);
+
+  const handleUnsplashClose = () => {
+    setUnsplashOpen(false);
+  };
 
   const handleExpansionChange = panel => {
     if (expanded !== panel) {
@@ -70,7 +88,7 @@ function LeftControl({
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: "backgroundContainer" }}>
-          <Typography variant="h6" align="center">
+          <Typography variant="h5" align="center">
             Gradients
           </Typography>
           <div className="colorPicker">
@@ -128,6 +146,99 @@ function LeftControl({
               </div>
             </div>
           )}
+          <Typography style={{ marginTop: "35px" }} variant="h5" align="center">
+            Background Image
+          </Typography>
+
+          <div className="sizeRadioContainer">
+            <div className="radio">
+              <span
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  color: "#999"
+                }}
+              >
+                None
+              </span>
+              <Radio
+                color="primary"
+                value="none"
+                checked={backgroundImage.mode.name === "none"}
+                onChange={e => onBackgroundImageSelect(e.target.value)}
+              />
+            </div>
+            <div className="radio">
+              <span
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  color: "#999"
+                }}
+              >
+                Cover
+              </span>
+              <Radio
+                color="primary"
+                value="cover"
+                checked={backgroundImage.mode.name === "cover"}
+                onChange={e => onBackgroundImageSelect(e.target.value)}
+              />
+            </div>
+            <div className="radio">
+              <span
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  color: "#999"
+                }}
+              >
+                Pattern
+              </span>
+              <Radio
+                color="primary"
+                value="pattern"
+                checked={backgroundImage.mode.name === "pattern"}
+                onChange={e => onBackgroundImageSelect(e.target.value)}
+              />
+            </div>
+          </div>
+          {backgroundImage.mode.name !== "none" ? (
+            <div className="opacitySlider">
+              <h4>Opacity:</h4>
+              <div className="slider-div">
+                <Slider
+                  classes={{ root: "slider" }}
+                  min={0.25}
+                  max={1}
+                  step={0.25}
+                  value={backgroundImage.opacity}
+                  onChange={(e, value) => {
+                    setBackgroundImageOpacity(e, value);
+                  }}
+                />
+                <span>{backgroundImage.opacity}</span>
+              </div>
+            </div>
+          ) : null}
+          <Button
+            onClick={() => {
+              setBackgroundModeUnsplash(true);
+              setUnsplashOpen(true);
+            }}
+            color="primary"
+            variant="contained"
+          >
+            Search
+          </Button>
+
+          <div className="bgImageUpload">
+            <Dropzone
+              backgroundImage={true}
+              imgArgs={canvasState.image.size.args}
+              addImageUrl={addImageUrl}
+            />
+          </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel
@@ -227,7 +338,7 @@ function LeftControl({
                 <Slider
                   classes={{ root: "xpositionSlider" }}
                   min={0}
-                  max={10}
+                  max={20}
                   step={1}
                   value={size.args.sliderPositionX}
                   onChange={(e, value) => {
@@ -246,7 +357,7 @@ function LeftControl({
                 <Slider
                   classes={{ root: "ypositionSlider" }}
                   min={0}
-                  max={10}
+                  max={20}
                   step={1}
                   value={size.args.sliderPositionY}
                   onChange={(e, value) => {
@@ -261,7 +372,13 @@ function LeftControl({
           <Typography variant="h6" align="center">
             Browse
           </Typography>
-          <ButtonBase classes={{ root: "browseBtn" }}>
+          <ButtonBase
+            onClick={e => {
+              setBackgroundModeUnsplash(false);
+              setUnsplashOpen(true);
+            }}
+            classes={{ root: "browseBtn" }}
+          >
             <div className="imgContainer">
               <div className="bgImage" />
               <span>1000's of Images</span>
@@ -276,6 +393,20 @@ function LeftControl({
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
+
+      <Unsplash
+        open={unsplashOpen}
+        handleClose={handleUnsplashClose}
+        query={unsplashQuery}
+        images={unsplashResults}
+        api={unsplashAPI}
+        queryChange={unsplashQueryChange}
+        setUnsplashResults={setUnsplashResults}
+        canvasState={canvasState}
+        setUnsplashPage={setUnsplashPage}
+        selectUnsplashImage={selectUnsplashImage}
+        addImagePathUnsplash={addImagePathUnsplash}
+      />
     </div>
   );
 }

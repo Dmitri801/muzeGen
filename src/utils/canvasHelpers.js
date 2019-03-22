@@ -1,42 +1,82 @@
 import Pica from "pica";
 const pica = Pica();
 
-export const testerDraw = (canvas, ctx, imgCtx, width, height, imgSrc) => {
-  const img = new Image();
-  img.src = imgSrc;
+// export const testerDraw = (canvas, ctx, imgCtx, width, height, imgSrc) => {
+//   const img = new Image();
+//   img.src = imgSrc;
 
-  img.onload = function() {
-    pica
-      .resize(img, canvas, {
-        unsharpAmount: 80,
-        alpha: true
-      })
-      .then(result => {
-        console.log(result);
-      })
-      .then(() => {
-        console.log("ay");
+//   img.onload = function() {
+//     pica
+//       .resize(img, canvas, {
+//         unsharpAmount: 80,
+//         alpha: true
+//       })
+//       .then(result => {
+//         console.log(result);
+//       })
+//       .then(() => {
+//         console.log("ay");
+//       });
+//   };
+//   console.log("Tester");
+// };
+
+export const addBackgroundImg = (imgSrc, opacity, addImage) => {
+  addImage(imgSrc, opacity);
+};
+
+export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
+  const { opacity, mode, images } = backgroundState;
+  if (imgSrc !== "") {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = imgSrc;
+
+    if (opacity < 1) {
+      console.log(images);
+      images.forEach(loadedImg => {
+        const newLoadedImg = new Image();
+        newLoadedImg.crossOrigin = "Anonymous";
+        newLoadedImg.src = loadedImg.src;
+        let drawX = canvas.width / 2 - newLoadedImg.width / 2;
+        let drawY = canvas.width / 2 - newLoadedImg.width / 2;
+        newLoadedImg.onload = function() {
+          ctx.save();
+          ctx.globalAlpha = loadedImg.opacity;
+          ctx.drawImage(newLoadedImg, drawX, drawY);
+          ctx.restore();
+        };
       });
-  };
-  console.log("Tester");
+    } else {
+      img.onload = function() {
+        pica
+          .resize(img, canvas, {
+            alpha: true
+          })
+          .then(result => console.log(result));
+      };
+    }
+
+    img.onerror = function() {
+      console.log("Background Image had an error loading");
+    };
+
+    console.log(opacity, mode.name, images);
+  }
 };
 
 export const drawImage = (ctx, imgSrc, args, effect, canvas) => {
   if (imgSrc !== "") {
+    console.log(imgSrc);
     const img = new Image();
+    img.crossOrigin = "Anonymous";
     img.src = imgSrc;
-
     img.onload = function() {
-      addShadow(ctx);
       if (img.naturalWidth > img.naturalHeight + 200) {
         if (args.width > 399) {
           canvas.width = args.width + 150;
-          // canvas.style.left = `${args.left - 80}px`;
-          // canvas.style.top = `${args.top - 20}px`;
         } else {
           canvas.width = args.width + 100;
-          // canvas.style.left = `${args.left - 50}px`;
-          // canvas.style.top = `${args.top - 20}px`;
         }
 
         pica
@@ -48,12 +88,10 @@ export const drawImage = (ctx, imgSrc, args, effect, canvas) => {
           })
           .then(() => {
             console.log("ay");
-            removeShadow(ctx);
           });
       } else {
         canvas.width = args.width;
-        // canvas.style.left = `${args.left}px`;
-        // canvas.style.top = `${args.top}px`;
+
         pica
           .resize(img, canvas, {
             alpha: true
@@ -68,7 +106,7 @@ export const drawImage = (ctx, imgSrc, args, effect, canvas) => {
     };
 
     img.onerror = function() {
-      console.log("Error loading image");
+      console.log("Error loading logo image");
     };
   }
 };
@@ -206,17 +244,3 @@ export const saveCanvasAsImage = (
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   imgCtx.clearRect(0, 0, imgCanvas.width, imgCanvas.height);
 };
-
-function addShadow(ctx) {
-  ctx.shadowOffsetX = 3;
-  ctx.shadowOffsetY = 3;
-  ctx.shadowColor = "black";
-  ctx.shadowBlur = 10;
-}
-
-function removeShadow(ctx) {
-  ctx.shadowOffsetX = 3;
-  ctx.shadowOffsetY = 3;
-  ctx.shadowColor = "black";
-  ctx.shadowBlur = 10;
-}

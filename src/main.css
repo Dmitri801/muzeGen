@@ -22,6 +22,7 @@ body {
 /* Left Controls */
 
 .left_control {
+  min-height: 970px;
   height: 100%;
   background: #212121;
   width: 25%;
@@ -71,6 +72,14 @@ body {
 
 .slider {
   width: 70% !important;
+}
+
+.opacitySlider {
+  color: #fff;
+}
+
+.bgImageUpload {
+  margin-top: 25px;
 }
 
 .positionContainer {
@@ -139,20 +148,6 @@ body {
   border: 4px solid white;
 }
 
-/* Centering slider control */
-/* AS slider increases
-  trackAfter scaleX goes down by 1
-  trackBefore scaleX goes up by 1
-  thumbWrapper translateX increases by 10%
-
-  trackBefore scaleY
-  if(position < target) 
-  scaleY(0)
-  else 
-  scaleY(1)
-*/
-/* Default */
-
 /* Image */
 .sizeRadioContainer {
   display: flex;
@@ -173,6 +168,7 @@ body {
 /* Right controls */
 
 .right_control {
+  min-height: 970px;
   height: 100%;
   background: #212121;
   width: 25%;
@@ -221,7 +217,7 @@ body {
 .download-container {
   position: absolute;
   margin-left: -40px;
-  bottom: 30%;
+  bottom: 50%;
 }
 
 /* Text Dialog */
@@ -292,6 +288,96 @@ body {
   padding: 20px;
   background: #555 !important;
   width: 50%;
+}
+
+/* Unsplash Dialog */
+
+.unsplashMain {
+  position: relative;
+}
+
+.unsplashAddBtn {
+  position: absolute !important;
+  width: 70px !important;
+  height: 70px !important;
+  bottom: 30px;
+  right: 30px;
+}
+
+.unsplashAddBtn svg {
+  width: 40px;
+  height: 40px;
+}
+
+.unsplashNav {
+  margin-bottom: 100px !important;
+  height: 100px !important;
+}
+
+.navTitle {
+  margin: 0 auto !important;
+}
+
+.navTitle a {
+  color: #fff;
+}
+
+.closeIconUnsplash {
+  position: absolute !important;
+  margin-top: 15px !important;
+}
+
+.closeIconUnsplash svg {
+  height: 40px;
+  width: 40px;
+}
+
+.unsplashSearchHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  position: absolute;
+  width: 100%;
+}
+
+.unsplashSearchCard {
+  margin-top: 50px;
+  width: 50%;
+  padding: 10px;
+  z-index: 99999 !important;
+}
+
+.unsplashSearch::placeholder {
+  text-align: center !important;
+}
+
+.unsplashGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 200px !important;
+}
+
+.unsplashGridTile {
+  width: 100%;
+  height: 450px;
+  border: 5px solid transparent;
+}
+
+.unsplashUserIcon {
+  color: #fff;
+  margin-right: 15px;
+}
+.unsplashGridButton {
+  height: 450px !important;
+}
+
+.infiniteScroll {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100% !important;
+  height: 750px !important;
 }
 
 /* Canvas styling  */

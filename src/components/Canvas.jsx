@@ -7,6 +7,8 @@ import {
   // testerDraw,
   // showGrid,
   drawImage,
+  drawBackgroundImg,
+  addBackgroundImg,
   saveCanvasAsImage
 } from "../utils/canvasHelpers";
 
@@ -52,6 +54,7 @@ class Canvas extends Component {
       artistVal
     } = this.props.canvasState.text;
     const { imgPath, size, effect } = this.props.canvasState.image;
+    const { backgroundImage } = this.props.canvasState;
     if (
       prevProps.canvasState.reset !== this.props.canvasState.reset &&
       this.props.canvasState.reset
@@ -120,8 +123,20 @@ class Canvas extends Component {
     ) {
       if (mode.name === "Mode Four" || mode.name === "Mode Two") {
         this.drawCanvasLinear();
+        drawBackgroundImg(
+          backgroundImage.imgPath,
+          this.canvas,
+          backgroundImage.opacity,
+          backgroundImage.mode.name
+        );
       } else {
         this.drawCanvasRadial();
+        drawBackgroundImg(
+          backgroundImage.imgPath,
+          this.canvas,
+          backgroundImage.opacity,
+          backgroundImage.mode.name
+        );
       }
     } else if (
       prevProps.canvasState.text.textSaved !== textSaved &&
@@ -159,6 +174,35 @@ class Canvas extends Component {
       setTimeout(() => {
         this.drawCanvasLinear();
       }, 20);
+    } else if (
+      prevProps.canvasState.backgroundImage.imgPath !== backgroundImage.imgPath
+    ) {
+      addBackgroundImg(
+        backgroundImage.imgPath,
+        backgroundImage.opacity,
+        this.props.addImageBackground
+      );
+    } else if (
+      prevProps.canvasState.backgroundImage.images.length !==
+      backgroundImage.images.length
+    ) {
+      if (mode.name === "Mode Four" || mode.name === "Mode Two") {
+        this.drawCanvasLinear();
+        drawBackgroundImg(
+          this.ctx,
+          backgroundImage.imgPath,
+          this.canvas,
+          backgroundImage
+        );
+      } else {
+        this.drawCanvasRadial();
+        drawBackgroundImg(
+          this.ctx,
+          backgroundImage.imgPath,
+          this.canvas,
+          backgroundImage
+        );
+      }
     }
   }
 
@@ -192,6 +236,21 @@ class Canvas extends Component {
     } = this.props.canvasState.backgroundColor;
 
     drawRadialBackground(this.ctx, mode.gradiantArgs, gradientOne, gradientTwo);
+  };
+
+  drawCanvasBackgroundImg = backgroundImage => {
+    addBackgroundImg(
+      backgroundImage.imgPath,
+      backgroundImage.opacity,
+      this.props.addImageBackground
+    );
+
+    drawBackgroundImg(
+      this.ctx,
+      backgroundImage.imgPath,
+      this.canvas,
+      backgroundImage
+    );
   };
 
   render() {
