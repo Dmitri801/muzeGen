@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { mainPurple } from "./utils/colors";
+import { Provider } from "react-redux";
+import store from "./store";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
@@ -16,10 +18,11 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <App />
-  </MuiThemeProvider>,
-
+  <Provider store={store}>
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
+  </Provider>,
   document.getElementById("root")
 );
 

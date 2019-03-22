@@ -19,7 +19,7 @@ const pica = Pica();
 //       });
 //   };
 //   console.log("Tester");
-// };
+// }; 
 
 export const addBackgroundImg = (imgSrc, opacity, addImage) => {
   addImage(imgSrc, opacity);
@@ -33,18 +33,31 @@ export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
     img.src = imgSrc;
 
     if (opacity < 1) {
-      console.log(images);
-      images.forEach(loadedImg => {
+
+      const sortedImgs = images.sort((a,b) => b.opacity-a.opacity);
+      console.log(sortedImgs)
+      sortedImgs.forEach(loadedImg => {
         const newLoadedImg = new Image();
         newLoadedImg.crossOrigin = "Anonymous";
         newLoadedImg.src = loadedImg.src;
-        let drawX = canvas.width / 2 - newLoadedImg.width / 2;
-        let drawY = canvas.width / 2 - newLoadedImg.width / 2;
+        
         newLoadedImg.onload = function() {
-          ctx.save();
-          ctx.globalAlpha = loadedImg.opacity;
-          ctx.drawImage(newLoadedImg, drawX, drawY);
-          ctx.restore();
+        if(loadedImg.opacity === 1) {
+          let drawX = canvas.width / 2 - newLoadedImg.width / 2;
+          let drawY = canvas.height / 2 - newLoadedImg.height / 2;
+            ctx.save();
+            ctx.globalAlpha = loadedImg.opacity;
+            ctx.drawImage(newLoadedImg, drawX, drawY);
+            ctx.restore();
+        } else {
+          let drawX = canvas.width / 2 - newLoadedImg.width / 2;
+          let drawY = canvas.height / 2 - newLoadedImg.height / 2;
+            ctx.save();
+            ctx.globalAlpha = loadedImg.opacity;
+            ctx.drawImage(newLoadedImg, drawX, drawY);
+            ctx.restore();
+        }
+       
         };
       });
     } else {
