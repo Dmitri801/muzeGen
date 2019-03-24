@@ -147,7 +147,7 @@ function LeftControl({
             </div>
           )}
           <Typography style={{ marginTop: "35px" }} variant="h5" align="center">
-            Background Image
+            Layer Images
           </Typography>
 
           <div className="sizeRadioContainer">
@@ -203,24 +203,24 @@ function LeftControl({
               />
             </div>
           </div>
-          {backgroundImage.mode.name !== "none" ? (
-            <div className="opacitySlider">
-              <h4>Opacity:</h4>
-              <div className="slider-div">
-                <Slider
-                  classes={{ root: "slider" }}
-                  min={0.25}
-                  max={1}
-                  step={0.25}
-                  value={backgroundImage.opacity}
-                  onChange={(e, value) => {
-                    setBackgroundImageOpacity(e, value);
-                  }}
-                />
-                <span>{backgroundImage.opacity}</span>
-              </div>
+
+          <div className="opacitySlider">
+            <h4>Opacity:</h4>
+            <div className="slider-div">
+              <Slider
+                classes={{ root: "slider" }}
+                min={0.25}
+                max={1}
+                step={0.25}
+                value={backgroundImage.opacity}
+                onChange={(e, value) => {
+                  setBackgroundImageOpacity(e, value);
+                }}
+              />
+              <span>{backgroundImage.opacity}</span>
             </div>
-          ) : null}
+          </div>
+
           <Button
             onClick={() => {
               setBackgroundModeUnsplash(true);
@@ -230,6 +230,17 @@ function LeftControl({
             variant="contained"
           >
             Search
+          </Button>
+          <Button
+            style={{ marginTop: "10px" }}
+            onClick={() => {
+              setBackgroundModeUnsplash(true);
+              setUnsplashOpen(true);
+            }}
+            color="secondary"
+            variant="contained"
+          >
+            Clear Images
           </Button>
 
           <div className="bgImageUpload">

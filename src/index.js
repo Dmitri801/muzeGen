@@ -10,7 +10,10 @@ import * as serviceWorker from "./serviceWorker";
 const theme = createMuiTheme({
   palette: {
     type: "dark",
-    primary: mainPurple
+    primary: mainPurple,
+    secondary: {
+      main: "#950000"
+    }
   },
   typography: {
     useNextVariants: true
