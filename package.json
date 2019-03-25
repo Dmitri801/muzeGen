@@ -8,6 +8,7 @@
     "@material-ui/lab": "^3.0.0-alpha.30",
     "axios": "^0.18.0",
     "caman": "^4.1.2",
+    "cuid": "^2.1.6",
     "hermite-resize": "git+https://github.com/viliusle/Hermite-resize.git",
     "pica": "^5.0.0",
     "react": "^16.8.3",

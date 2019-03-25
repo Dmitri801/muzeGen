@@ -18,6 +18,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import Typography from "@material-ui/core/Typography";
 import { UNSPLASH_ACCESS_KEY, UNSPLASH_APP_NAME } from "../keys/keys";
 import InfiniteScroll from "react-infinite-scroller";
+import cuid from "cuid";
 class UnsplashDialog extends Component {
   render() {
     const {
@@ -46,7 +47,6 @@ class UnsplashDialog extends Component {
         .photos(query, 1)
         .then(res => res.json())
         .then(data => {
-          console.log(data.results);
           setUnsplashResults(data.results, false);
         });
     };
@@ -134,47 +134,50 @@ class UnsplashDialog extends Component {
           >
             {images.length > 0 &&
               images.map(image => (
-                <ButtonBase
-                  key={image.id}
-                  classes={{ root: "unsplashGridButton" }}
-                  onClick={() => onImageSelect(image.id)}
-                  disableRipple
-                >
-                  <GridListTile
-                    style={
-                      image.id === selectedImg ? { borderColor: "purple" } : {}
-                    }
-                    classes={{ root: "unsplashGridTile" }}
+                <React.Fragment key={cuid()}>
+                  <ButtonBase
+                    classes={{ root: "unsplashGridButton" }}
+                    onClick={() => onImageSelect(image.id)}
+                    disableRipple
                   >
-                    <img
-                      style={{ width: "100%", height: "100%" }}
-                      src={image.urls.regular}
-                      alt="unsplashimage"
-                    />
-                    <GridListTileBar
-                      title={image.user.name}
-                      subtitle={
-                        <span>
-                          @
-                          {image.user.twitter_username
-                            ? image.user.twitter_username
-                            : "unsplash"}{" "}
-                        </span>
+                    <GridListTile
+                      style={
+                        image.id === selectedImg
+                          ? { borderColor: "purple" }
+                          : {}
                       }
-                      actionIcon={
-                        <a
-                          href={`${
-                            image.user.links.html
-                          }?utm_source=${UNSPLASH_APP_NAME}&utm_medium=referral`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <InfoIcon classes={{ root: "unsplashUserIcon" }} />
-                        </a>
-                      }
-                    />
-                  </GridListTile>
-                </ButtonBase>
+                      classes={{ root: "unsplashGridTile" }}
+                    >
+                      <img
+                        style={{ width: "100%", height: "100%" }}
+                        src={image.urls.regular}
+                        alt="unsplashimage"
+                      />
+                      <GridListTileBar
+                        title={image.user.name}
+                        subtitle={
+                          <span>
+                            @
+                            {image.user.twitter_username
+                              ? image.user.twitter_username
+                              : "unsplash"}{" "}
+                          </span>
+                        }
+                        actionIcon={
+                          <a
+                            href={`${
+                              image.user.links.html
+                            }?utm_source=${UNSPLASH_APP_NAME}&utm_medium=referral`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <InfoIcon classes={{ root: "unsplashUserIcon" }} />
+                          </a>
+                        }
+                      />
+                    </GridListTile>
+                  </ButtonBase>
+                </React.Fragment>
               ))}
           </InfiniteScroll>
         </GridList>

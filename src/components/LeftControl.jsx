@@ -36,7 +36,8 @@ function LeftControl({
   addImagePathUnsplash,
   onBackgroundImageSelect,
   setBackgroundImageOpacity,
-  setBackgroundModeUnsplash
+  setBackgroundModeUnsplash,
+  onClearImagesBtn
 }) {
   const { mode } = canvasState.backgroundColor;
   const { size, imgPath } = canvasState.image;
@@ -185,7 +186,7 @@ function LeftControl({
                 onChange={e => onBackgroundImageSelect(e.target.value)}
               />
             </div>
-            <div className="radio">
+            {/* <div className="radio">
               <span
                 style={{
                   display: "block",
@@ -201,7 +202,7 @@ function LeftControl({
                 checked={backgroundImage.mode.name === "pattern"}
                 onChange={e => onBackgroundImageSelect(e.target.value)}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="opacitySlider">
@@ -210,7 +211,7 @@ function LeftControl({
               <Slider
                 classes={{ root: "slider" }}
                 min={0.25}
-                max={1}
+                max={backgroundImage.images.length < 1 ? 1 : 0.75}
                 step={0.25}
                 value={backgroundImage.opacity}
                 onChange={(e, value) => {
@@ -222,34 +223,48 @@ function LeftControl({
           </div>
 
           <Button
+            style={{ marginTop: "10px" }}
             onClick={() => {
               setBackgroundModeUnsplash(true);
               setUnsplashOpen(true);
             }}
             color="primary"
             variant="contained"
+            disabled={backgroundImage.images.length === 3}
           >
             Search
-          </Button>
-          <Button
-            style={{ marginTop: "10px" }}
-            onClick={() => {
-              setBackgroundModeUnsplash(true);
-              setUnsplashOpen(true);
-            }}
-            color="secondary"
-            variant="contained"
-          >
-            Clear Images
           </Button>
 
           <div className="bgImageUpload">
             <Dropzone
-              backgroundImage={true}
+              backgroundImage={backgroundImage}
               imgArgs={canvasState.image.size.args}
               addImageUrl={addImageUrl}
             />
           </div>
+          {backgroundImage.images.length > 0 && (
+            <React.Fragment>
+              <div className="clearImagesCont">
+                <Button
+                  classes={{ root: "clearImgsBtn" }}
+                  style={{ marginTop: "20px" }}
+                  onClick={() => {
+                    onClearImagesBtn();
+                  }}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Clear Images
+                </Button>
+                <span className="imgsNum">{backgroundImage.images.length}</span>
+              </div>
+              <span
+                style={{ color: "#fff", marginTop: "5px", fontSize: "14px" }}
+              >
+                * Limit 3
+              </span>
+            </React.Fragment>
+          )}
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel

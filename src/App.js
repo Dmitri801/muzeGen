@@ -45,7 +45,8 @@ class App extends Component {
         name: "none"
       },
       opacity: 1,
-      images: []
+      images: [],
+      resetting: false
     },
     text: {
       fonts: [],
@@ -422,29 +423,6 @@ class App extends Component {
       default:
         return;
     }
-  };
-
-  onBackgroundImageSelect = value => {
-    this.setState({
-      ...this.state,
-      backgroundImage: {
-        ...this.state.backgroundImage,
-        mode: {
-          ...this.state.backgroundImage.mode,
-          name: value
-        }
-      }
-    });
-  };
-
-  setBackgroundImageOpacity = (event, value) => {
-    this.setState({
-      ...this.state,
-      backgroundImage: {
-        ...this.state.backgroundImage,
-        opacity: value
-      }
-    });
   };
 
   // Text
@@ -856,19 +834,109 @@ class App extends Component {
   };
 
   // Background Image
+  onBackgroundImageSelect = value => {
+    this.setState({
+      ...this.state,
+      backgroundImage: {
+        ...this.state.backgroundImage,
+        mode: {
+          ...this.state.backgroundImage.mode,
+          name: value
+        }
+      }
+    });
+  };
+
+  setBackgroundImageOpacity = (event, value) => {
+    const { images } = this.state.backgroundImage;
+    if (images.length >= 1) {
+      if (value > 0.75) {
+        this.setState({
+          ...this.state,
+          backgroundImage: {
+            ...this.state.backgroundImage,
+            opacity: 0.75
+          }
+        });
+      } else {
+        this.setState({
+          ...this.state,
+          backgroundImage: {
+            ...this.state.backgroundImage,
+            opacity: value
+          }
+        });
+      }
+    } else {
+      this.setState({
+        ...this.state,
+        backgroundImage: {
+          ...this.state.backgroundImage,
+          opacity: value
+        }
+      });
+    }
+  };
   addImageBackground = (imgSrc, opacity) => {
     const imgObject = {
       src: imgSrc,
       opacity
     };
+    if (opacity === 1) {
+      this.setState(
+        {
+          ...this.state,
+          backgroundImage: {
+            ...this.state.backgroundImage,
+            images: [...this.state.backgroundImage.images, imgObject]
+          }
+        },
+        () => {
+          this.setState({
+            ...this.state,
+            backgroundImage: {
+              ...this.state.backgroundImage,
+              opacity: 0.75
+            }
+          });
+        }
+      );
+    } else {
+      this.setState({
+        ...this.state,
+        backgroundImage: {
+          ...this.state.backgroundImage,
+          images: [...this.state.backgroundImage.images, imgObject]
+        }
+      });
+    }
+  };
 
-    this.setState({
-      ...this.state,
-      backgroundImage: {
-        ...this.state.backgroundImage,
-        images: [...this.state.backgroundImage.images, imgObject]
+  onClearImagesBtn = () => {
+    this.setState(
+      {
+        ...this.state,
+        backgroundImage: {
+          ...this.state.backgroundImage,
+          mode: {
+            name: "none"
+          },
+          imgPath: "",
+          images: [],
+
+          resetting: true
+        }
+      },
+      () => {
+        this.setState({
+          ...this.state,
+          backgroundImage: {
+            ...this.state.backgroundImage,
+            resetting: false
+          }
+        });
       }
-    });
+    );
   };
 
   // Unsplash
@@ -1097,6 +1165,7 @@ class App extends Component {
         onBackgroundImageSelect={this.onBackgroundImageSelect}
         setBackgroundImageOpacity={this.setBackgroundImageOpacity}
         setBackgroundModeUnsplash={this.setBackgroundModeUnsplash}
+        onClearImagesBtn={this.onClearImagesBtn}
       >
         <Canvas
           canvasState={this.state}

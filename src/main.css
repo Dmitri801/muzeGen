@@ -22,7 +22,7 @@ body {
 /* Left Controls */
 
 .left_control {
-  min-height: 970px;
+  min-height: 1100px;
   height: 100%;
   background: #212121;
   width: 25%;
@@ -79,7 +79,7 @@ body {
 }
 
 .bgImageUpload {
-  margin-top: 25px;
+  margin-top: 10px;
 }
 
 .positionContainer {
@@ -148,6 +148,24 @@ body {
   border: 4px solid white;
 }
 
+.clearImagesCont {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.clearImgsBtn {
+  width: 70%;
+}
+
+.clearImagesCont .imgsNum {
+  color: #fff;
+  background: #333;
+  padding: 5px;
+  width: 20%;
+  border-radius: 5px;
+}
+
 /* Image */
 .sizeRadioContainer {
   display: flex;
@@ -156,6 +174,7 @@ body {
 }
 
 .dropZone {
+  position: relative;
   border: 2px dotted grey;
   padding: 12px;
   color: #fff;
@@ -165,10 +184,25 @@ body {
   text-align: center;
 }
 
+.disabledDropzone {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(73, 73, 73, 0.8);
+  color: red;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 55px;
+  font-family: "Roboto";
+}
+
 /* Right controls */
 
 .right_control {
-  min-height: 970px;
+  min-height: 1100px;
   height: 100%;
   background: #212121;
   width: 25%;

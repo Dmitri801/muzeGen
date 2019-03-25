@@ -28,6 +28,7 @@ function Frame(props) {
         onBackgroundImageSelect={props.onBackgroundImageSelect}
         setBackgroundImageOpacity={props.setBackgroundImageOpacity}
         setBackgroundModeUnsplash={props.setBackgroundModeUnsplash}
+        onClearImagesBtn={props.onClearImagesBtn}
       />
       <RightControl
         text={props.canvasState.text}

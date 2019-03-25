@@ -19,10 +19,12 @@ const pica = Pica();
 //       });
 //   };
 //   console.log("Tester");
-// }; 
+// };
 
 export const addBackgroundImg = (imgSrc, opacity, addImage) => {
-  addImage(imgSrc, opacity);
+  if (imgSrc !== "") {
+    addImage(imgSrc, opacity);
+  }
 };
 
 export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
@@ -33,31 +35,29 @@ export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
     img.src = imgSrc;
 
     if (opacity < 1) {
+      const sortedImgs = images.sort((a, b) => b.opacity - a.opacity);
 
-      const sortedImgs = images.sort((a,b) => b.opacity-a.opacity);
-      console.log(sortedImgs)
       sortedImgs.forEach(loadedImg => {
         const newLoadedImg = new Image();
         newLoadedImg.crossOrigin = "Anonymous";
         newLoadedImg.src = loadedImg.src;
-        
+
         newLoadedImg.onload = function() {
-        if(loadedImg.opacity === 1) {
-          let drawX = canvas.width / 2 - newLoadedImg.width / 2;
-          let drawY = canvas.height / 2 - newLoadedImg.height / 2;
+          if (loadedImg.opacity === 1) {
+            let drawX = canvas.width / 2 - newLoadedImg.width / 2;
+            let drawY = canvas.height / 2 - newLoadedImg.height / 2;
             ctx.save();
             ctx.globalAlpha = loadedImg.opacity;
             ctx.drawImage(newLoadedImg, drawX, drawY);
             ctx.restore();
-        } else {
-          let drawX = canvas.width / 2 - newLoadedImg.width / 2;
-          let drawY = canvas.height / 2 - newLoadedImg.height / 2;
+          } else {
+            let drawX = canvas.width / 2 - newLoadedImg.width / 2;
+            let drawY = canvas.height / 2 - newLoadedImg.height / 2;
             ctx.save();
             ctx.globalAlpha = loadedImg.opacity;
             ctx.drawImage(newLoadedImg, drawX, drawY);
             ctx.restore();
-        }
-       
+          }
         };
       });
     } else {
@@ -80,7 +80,6 @@ export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
 
 export const drawImage = (ctx, imgSrc, args, effect, canvas) => {
   if (imgSrc !== "") {
-    console.log(imgSrc);
     const img = new Image();
     img.crossOrigin = "Anonymous";
     img.src = imgSrc;

@@ -175,7 +175,10 @@ class Canvas extends Component {
         this.drawCanvasLinear();
       }, 20);
     } else if (
-      prevProps.canvasState.backgroundImage.imgPath !== backgroundImage.imgPath
+      prevProps.canvasState.backgroundImage.imgPath !==
+        backgroundImage.imgPath &&
+      backgroundImage.images.length <= 2 &&
+      !backgroundImage.resetting
     ) {
       addBackgroundImg(
         backgroundImage.imgPath,
@@ -202,6 +205,35 @@ class Canvas extends Component {
           this.canvas,
           backgroundImage
         );
+      }
+    } else if (
+      prevProps.canvasState.backgroundImage.mode.name !==
+      backgroundImage.mode.name
+    ) {
+      if (backgroundImage.mode.name === "none") {
+        if (mode.name === "Mode Four" || mode.name === "Mode Two") {
+          this.drawCanvasLinear();
+        } else {
+          this.drawCanvasRadial();
+        }
+      } else {
+        if (mode.name === "Mode Four" || mode.name === "Mode Two") {
+          this.drawCanvasLinear();
+          drawBackgroundImg(
+            this.ctx,
+            backgroundImage.imgPath,
+            this.canvas,
+            backgroundImage
+          );
+        } else {
+          this.drawCanvasRadial();
+          drawBackgroundImg(
+            this.ctx,
+            backgroundImage.imgPath,
+            this.canvas,
+            backgroundImage
+          );
+        }
       }
     }
   }
