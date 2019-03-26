@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button";
 import { useSpring, animated } from "react-spring";
 import Dropzone from "./DropZone";
 import Unsplash from "./Unsplash";
+import { SwatchesPicker } from "react-color";
 function LeftControl({
   canvasState,
   onGradientOneChange,
@@ -93,12 +94,21 @@ function LeftControl({
             Gradients
           </Typography>
           <div className="colorPicker">
-            <input
+            <SwatchesPicker
+              color={canvasState.backgroundColor.gradientOne}
+              onChange={(color, event) => {
+                onGradientOneChange(color.hex);
+              }}
+            />
+            {/* <input
               type="color"
               id="colorSelectorOne"
               value={canvasState.backgroundColor.gradientOne}
-              onChange={e => onGradientOneChange(e.target.value)}
-            />
+              onChange={e => {
+                console.log(e.nativeEvent);
+                onGradientOneChange(e.target.value);
+              }}
+            /> */}
             <input
               type="color"
               id="colorSelectorTwo"
@@ -186,23 +196,6 @@ function LeftControl({
                 onChange={e => onBackgroundImageSelect(e.target.value)}
               />
             </div>
-            {/* <div className="radio">
-              <span
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  color: "#999"
-                }}
-              >
-                Pattern
-              </span>
-              <Radio
-                color="primary"
-                value="pattern"
-                checked={backgroundImage.mode.name === "pattern"}
-                onChange={e => onBackgroundImageSelect(e.target.value)}
-              />
-            </div> */}
           </div>
 
           <div className="opacitySlider">
@@ -215,6 +208,8 @@ function LeftControl({
                 step={0.25}
                 value={backgroundImage.opacity}
                 onChange={(e, value) => {
+                  console.log(e);
+
                   setBackgroundImageOpacity(e, value);
                 }}
               />

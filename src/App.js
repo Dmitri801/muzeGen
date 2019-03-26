@@ -1096,12 +1096,25 @@ class App extends Component {
           effect: "none",
           opacity: null
         },
+        backgroundImage: {
+          imgPath: "",
+          mode: {
+            name: "none"
+          },
+          opacity: 1,
+          images: [],
+          resetting: true
+        },
         reset: true
       },
       () => {
         this.setState({
           ...this.state,
-          reset: false
+          reset: false,
+          backgroundImage: {
+            ...this.state.backgroundImage,
+            resetting: false
+          }
         });
       }
     );

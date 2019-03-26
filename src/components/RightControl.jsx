@@ -8,81 +8,83 @@ import Cloud from "@material-ui/icons/Cloud";
 import ConfirmReset from "./ConfirmReset";
 import React, { useState } from "react";
 
-function RightControl({
-  text,
-  onAddTextBtnClick,
-  onTextValuesChanged,
-  handleOpenDialog,
-  handleCloseDialog,
-  handle3DCheck,
-  onFontFamilySelectChange,
-  onResetBtnClick,
-  triggerCanvasDownload
-}) {
-  const [resetOpen, setResetOpen] = useState(false);
+const RightControl = React.memo(
+  ({
+    text,
+    onAddTextBtnClick,
+    onTextValuesChanged,
+    handleOpenDialog,
+    handleCloseDialog,
+    handle3DCheck,
+    onFontFamilySelectChange,
+    onResetBtnClick,
+    triggerCanvasDownload
+  }) => {
+    const [resetOpen, setResetOpen] = useState(false);
 
-  const handleResetClose = () => {
-    setResetOpen(false);
-  };
+    const handleResetClose = () => {
+      setResetOpen(false);
+    };
 
-  const handleOpenReset = () => {
-    setResetOpen(true);
-  };
-  return (
-    <div className="right_control">
-      <List classes={{ root: "addTextBtn_container" }}>
-        <ListItem
-          onClick={handleOpenDialog}
-          classes={{ root: "addTextBtn" }}
-          button
-        >
-          <Typography align="center" variant="h6">
-            TEXT <Create />
-          </Typography>
-        </ListItem>
-      </List>
-      <List classes={{ root: "resetBtn_container" }}>
-        <ListItem
-          onClick={handleOpenReset}
-          classes={{ root: "resetBtn" }}
-          button
-        >
-          <Typography align="center" variant="h6">
-            RESET
-          </Typography>
-        </ListItem>
-      </List>
-      <div className="download-container">
-        <Fab
-          onClick={triggerCanvasDownload}
-          classes={{ root: "downloadBtn" }}
-          color="primary"
-        >
-          <Cloud />
-        </Fab>
+    const handleOpenReset = () => {
+      setResetOpen(true);
+    };
+    return (
+      <div className="right_control">
+        <List classes={{ root: "addTextBtn_container" }}>
+          <ListItem
+            onClick={handleOpenDialog}
+            classes={{ root: "addTextBtn" }}
+            button
+          >
+            <Typography align="center" variant="h6">
+              TEXT <Create />
+            </Typography>
+          </ListItem>
+        </List>
+        <List classes={{ root: "resetBtn_container" }}>
+          <ListItem
+            onClick={handleOpenReset}
+            classes={{ root: "resetBtn" }}
+            button
+          >
+            <Typography align="center" variant="h6">
+              RESET
+            </Typography>
+          </ListItem>
+        </List>
+        <div className="download-container">
+          <Fab
+            onClick={triggerCanvasDownload}
+            classes={{ root: "downloadBtn" }}
+            color="primary"
+          >
+            <Cloud />
+          </Fab>
+        </div>
+        <TextDialog
+          fonts={text.fonts}
+          fontFamilyVal={text.fontFamily}
+          fontColor={text.fontColor}
+          loading={text.loading}
+          closeDialog={handleCloseDialog}
+          songTitleVal={text.songTitleVal}
+          artistVal={text.artistVal}
+          onTextValuesChanged={onTextValuesChanged}
+          onAddTextBtnClick={onAddTextBtnClick}
+          modalOpen={text.modalOpen}
+          threeDChecked={text.threeD}
+          handle3DCheck={handle3DCheck}
+          onFontFamilySelectChange={onFontFamilySelectChange}
+        />
+        <ConfirmReset
+          open={resetOpen}
+          handleClose={handleResetClose}
+          resetCanvas={onResetBtnClick}
+        />
       </div>
-      <TextDialog
-        fonts={text.fonts}
-        fontFamilyVal={text.fontFamily}
-        fontColor={text.fontColor}
-        loading={text.loading}
-        closeDialog={handleCloseDialog}
-        songTitleVal={text.songTitleVal}
-        artistVal={text.artistVal}
-        onTextValuesChanged={onTextValuesChanged}
-        onAddTextBtnClick={onAddTextBtnClick}
-        modalOpen={text.modalOpen}
-        threeDChecked={text.threeD}
-        handle3DCheck={handle3DCheck}
-        onFontFamilySelectChange={onFontFamilySelectChange}
-      />
-      <ConfirmReset
-        open={resetOpen}
-        handleClose={handleResetClose}
-        resetCanvas={onResetBtnClick}
-      />
-    </div>
-  );
-}
+    );
+  }
+);
 
 export default RightControl;

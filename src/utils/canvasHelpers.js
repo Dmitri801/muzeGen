@@ -28,7 +28,7 @@ export const addBackgroundImg = (imgSrc, opacity, addImage) => {
 };
 
 export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
-  const { opacity, mode, images } = backgroundState;
+  const { opacity, images } = backgroundState;
   if (imgSrc !== "") {
     const img = new Image();
     img.crossOrigin = "Anonymous";
@@ -44,6 +44,7 @@ export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
 
         newLoadedImg.onload = function() {
           if (loadedImg.opacity === 1) {
+            console.log("Called");
             let drawX = canvas.width / 2 - newLoadedImg.width / 2;
             let drawY = canvas.height / 2 - newLoadedImg.height / 2;
             ctx.save();
@@ -73,8 +74,6 @@ export const drawBackgroundImg = (ctx, imgSrc, canvas, backgroundState) => {
     img.onerror = function() {
       console.log("Background Image had an error loading");
     };
-
-    console.log(opacity, mode.name, images);
   }
 };
 

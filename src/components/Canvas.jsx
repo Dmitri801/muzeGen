@@ -113,6 +113,12 @@ class Canvas extends Component {
         );
         this.drawCanvasLinear();
       }
+      drawBackgroundImg(
+        this.ctx,
+        backgroundImage.imgPath,
+        this.canvas,
+        backgroundImage
+      );
       console.log("Saved");
     }
     if (
@@ -121,22 +127,30 @@ class Canvas extends Component {
       prevProps.canvasState.backgroundColor.gradientThree !== gradientThree ||
       prevProps.canvasState.backgroundColor.mode.name !== mode.name
     ) {
-      if (mode.name === "Mode Four" || mode.name === "Mode Two") {
-        this.drawCanvasLinear();
-        // drawBackgroundImg(
-        //   backgroundImage.imgPath,
-        //   this.canvas,
-        //   backgroundImage.opacity,
-        //   backgroundImage.mode.name
-        // );
+      if (prevProps.canvasState.backgroundImage.mode.name !== "none") {
+        if (mode.name === "Mode Four" || mode.name === "Mode Two") {
+          this.drawCanvasLinear();
+          // drawBackgroundImg(
+          //   this.ctx,
+          //   backgroundImage.imgPath,
+          //   this.canvas,
+          //   backgroundImage
+          // );
+        } else {
+          this.drawCanvasRadial();
+          // drawBackgroundImg(
+          //   this.ctx,
+          //   backgroundImage.imgPath,
+          //   this.canvas,
+          //   backgroundImage
+          // );
+        }
       } else {
-        this.drawCanvasRadial();
-        // drawBackgroundImg(
-        //   backgroundImage.imgPath,
-        //   this.canvas,
-        //   backgroundImage.opacity,
-        //   backgroundImage.mode.name
-        // );
+        if (mode.name === "Mode Four" || mode.name === "Mode Two") {
+          this.drawCanvasLinear();
+        } else {
+          this.drawCanvasRadial();
+        }
       }
     } else if (
       prevProps.canvasState.text.textSaved !== textSaved &&
@@ -153,27 +167,33 @@ class Canvas extends Component {
       this.imgCtx.rect(0, 0, this.canvas.width, this.canvas.height);
       drawImage(this.imgCtx, imgPath, size.args, effect, this.imgCanvas);
     } else if (prevProps.canvasState.image.size.name !== size.name) {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
       drawImage(this.imgCtx, imgPath, size.args, effect, this.imgCanvas);
-      if (mode.name === "Mode Four" || mode.name === "Mode Two") {
-        this.drawCanvasLinear();
-      } else {
-        this.drawCanvasRadial();
-      }
-    } else if (prevProps.canvasState.image.effect !== effect) {
-      if (mode.name === "Mode Four" || mode.name === "Mode Two") {
-        this.drawCanvasLinear();
-      } else {
-        this.drawCanvasRadial();
-      }
+
+      // } else if (prevProps.canvasState.image.effect !== effect) {
+      //   if (mode.name === "Mode Four" || mode.name === "Mode Two") {
+      //     this.drawCanvasLinear();
+      //   } else {
+      //     this.drawCanvasRadial();
+      //   }
     } else if (
       prevProps.canvasState.backgroundColor.mode.sliderValue !==
       mode.sliderValue
     ) {
-      setTimeout(() => {
-        this.drawCanvasLinear();
-      }, 20);
+      if (prevProps.canvasState.backgroundImage.mode.name !== "none") {
+        setTimeout(() => {
+          this.drawCanvasLinear();
+          drawBackgroundImg(
+            this.ctx,
+            backgroundImage.imgPath,
+            this.canvas,
+            backgroundImage
+          );
+        }, 20);
+      } else {
+        setTimeout(() => {
+          this.drawCanvasLinear();
+        }, 20);
+      }
     } else if (
       prevProps.canvasState.backgroundImage.imgPath !==
         backgroundImage.imgPath &&
