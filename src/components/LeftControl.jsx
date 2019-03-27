@@ -58,6 +58,18 @@ function LeftControl({
       setExpanded(null);
     }
   };
+
+  const [gradientOneOpen, setGradientOneOpen] = useState(false);
+  const [gradientTwoOpen, setGradientTwoOpen] = useState(false);
+
+  const handleGradientOneOpen = () => {
+    setGradientOneOpen(true);
+  };
+
+  const handleGradientTwoOpen = () => {
+    setGradientTwoOpen(true);
+  };
+
   let linear = false;
   let thirdColor = false;
   let positionDisabled = true;
@@ -94,27 +106,20 @@ function LeftControl({
             Gradients
           </Typography>
           <div className="colorPicker">
-            <SwatchesPicker
-              color={canvasState.backgroundColor.gradientOne}
-              onChange={(color, event) => {
-                onGradientOneChange(color.hex);
-              }}
-            />
-            {/* <input
-              type="color"
-              id="colorSelectorOne"
-              value={canvasState.backgroundColor.gradientOne}
-              onChange={e => {
-                console.log(e.nativeEvent);
-                onGradientOneChange(e.target.value);
-              }}
-            /> */}
-            <input
-              type="color"
-              id="colorSelectorTwo"
-              value={canvasState.backgroundColor.gradientTwo}
-              onChange={e => onGradientTwoChange(e.target.value)}
-            />
+            <div onClick={handleGradientOneOpen} className="gradientBtn">
+              <span
+                style={{
+                  backgroundColor: canvasState.backgroundColor.gradientOne
+                }}
+              />
+            </div>
+            <div onClick={handleGradientTwoOpen} className="gradientBtn">
+              <span
+                style={{
+                  backgroundColor: canvasState.backgroundColor.gradientTwo
+                }}
+              />
+            </div>
             {thirdColor && (
               <input
                 type="color"
@@ -124,6 +129,40 @@ function LeftControl({
               />
             )}
           </div>
+          {gradientOneOpen && (
+            <React.Fragment>
+              <div
+                className="picker-overlay"
+                onClick={() => setGradientOneOpen(false)}
+              />
+              <div className="pickerContainer">
+                <SwatchesPicker
+                  className="swatchesPicker"
+                  color={canvasState.backgroundColor.gradientOne}
+                  onChange={(color, event) => {
+                    onGradientOneChange(color.hex);
+                  }}
+                />
+              </div>
+            </React.Fragment>
+          )}
+          {gradientTwoOpen && (
+            <React.Fragment>
+              <div
+                className="picker-overlay"
+                onClick={() => setGradientTwoOpen(false)}
+              />
+              <div className="pickerContainer">
+                <SwatchesPicker
+                  className="swatchesPicker"
+                  color={canvasState.backgroundColor.gradientTwo}
+                  onChange={(color, event) => {
+                    onGradientTwoChange(color.hex);
+                  }}
+                />
+              </div>
+            </React.Fragment>
+          )}
           <Typography variant="h6" align="center">
             Mode
           </Typography>

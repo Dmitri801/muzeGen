@@ -130,20 +130,20 @@ class Canvas extends Component {
       if (prevProps.canvasState.backgroundImage.mode.name !== "none") {
         if (mode.name === "Mode Four" || mode.name === "Mode Two") {
           this.drawCanvasLinear();
-          // drawBackgroundImg(
-          //   this.ctx,
-          //   backgroundImage.imgPath,
-          //   this.canvas,
-          //   backgroundImage
-          // );
+          drawBackgroundImg(
+            this.ctx,
+            backgroundImage.imgPath,
+            this.canvas,
+            backgroundImage
+          );
         } else {
           this.drawCanvasRadial();
-          // drawBackgroundImg(
-          //   this.ctx,
-          //   backgroundImage.imgPath,
-          //   this.canvas,
-          //   backgroundImage
-          // );
+          drawBackgroundImg(
+            this.ctx,
+            backgroundImage.imgPath,
+            this.canvas,
+            backgroundImage
+          );
         }
       } else {
         if (mode.name === "Mode Four" || mode.name === "Mode Two") {
