@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Fab from "@material-ui/core/Fab";
 import Cloud from "@material-ui/icons/Cloud";
 import ConfirmReset from "./ConfirmReset";
+import Feedback from "./Feedback";
 import React, { useState } from "react";
 
 const RightControl = React.memo(
@@ -82,6 +83,7 @@ const RightControl = React.memo(
           handleClose={handleResetClose}
           resetCanvas={onResetBtnClick}
         />
+        <Feedback />
       </div>
     );
   }

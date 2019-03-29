@@ -19,6 +19,7 @@
     "react-redux": "^6.0.1",
     "react-scripts": "2.1.5",
     "react-spring": "^8.0.15",
+    "react-star-rating-component": "^1.4.1",
     "redux": "^4.0.1",
     "unsplash-js": "^5.0.0",
     "webfontloader": "^1.6.28"

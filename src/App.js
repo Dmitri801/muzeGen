@@ -90,6 +90,10 @@ class App extends Component {
         backgroundMode: false
       }
     },
+    feedback: {
+      stars: null,
+      comments: ""
+    },
     reset: false,
     downloadToPng: false
   };
@@ -1119,6 +1123,19 @@ class App extends Component {
       }
     );
   };
+
+  // Feedback 
+
+  onFeedbackInputChange = (event) => {
+    const {value} = event.target;
+    this.setState({
+      ...this.state,
+      feedback: {
+        ...this.state.feedback,
+        comments: value
+      }
+    })
+  }
 
   // Trigger download
 
