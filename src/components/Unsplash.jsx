@@ -18,6 +18,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import Typography from "@material-ui/core/Typography";
 import { UNSPLASH_ACCESS_KEY, UNSPLASH_APP_NAME } from "../keys/keys";
 import InfiniteScroll from "react-infinite-scroller";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import cuid from "cuid";
 class UnsplashDialog extends Component {
   render() {
@@ -128,9 +129,10 @@ class UnsplashDialog extends Component {
             pageStart={1}
             loadMore={loadMoreImages}
             hasMore={true}
-            loader={<div className="loader">Loading ...</div>}
+            loader={<CircularProgress color="primary" />}
             useWindow={false}
             className="infiniteScroll"
+            threshold={100}
           >
             {images.length > 0 &&
               images.map(image => (

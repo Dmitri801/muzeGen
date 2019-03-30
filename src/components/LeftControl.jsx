@@ -10,6 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Radio from "@material-ui/core/Radio";
 import InsertPhoto from "@material-ui/icons/AddPhotoAlternate";
 import ColorLens from "@material-ui/icons/ColorLens";
+import WhatsHot from "@material-ui/icons/Whatshot";
 import Slider from "@material-ui/lab/Slider";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Button from "@material-ui/core/Button";
@@ -38,7 +39,8 @@ function LeftControl({
   onBackgroundImageSelect,
   setBackgroundImageOpacity,
   setBackgroundModeUnsplash,
-  onClearImagesBtn
+  onClearImagesBtn,
+  onClearLogoBtn
 }) {
   const { mode } = canvasState.backgroundColor;
   const { size, imgPath } = canvasState.image;
@@ -61,6 +63,7 @@ function LeftControl({
 
   const [gradientOneOpen, setGradientOneOpen] = useState(false);
   const [gradientTwoOpen, setGradientTwoOpen] = useState(false);
+  const [gradientThreeOpen, setGradientThreeOpen] = useState(false);
 
   const handleGradientOneOpen = () => {
     setGradientOneOpen(true);
@@ -68,6 +71,9 @@ function LeftControl({
 
   const handleGradientTwoOpen = () => {
     setGradientTwoOpen(true);
+  };
+  const handleGradientThreeOpen = () => {
+    setGradientThreeOpen(true);
   };
 
   let linear = false;
@@ -85,9 +91,7 @@ function LeftControl({
   }
 
   const positionSpringProps = useSpring({
-    opacity: positionDisabled ? 0 : 1,
-    position: positionDisabled ? `absolute` : `static`,
-    transform: positionDisabled ? `translateX(-500px)` : `translateX(0)`
+    opacity: positionDisabled ? 0 : 1
   });
   return (
     <div className="left_control">
@@ -121,12 +125,13 @@ function LeftControl({
               />
             </div>
             {thirdColor && (
-              <input
-                type="color"
-                id="colorSelectorTwo"
-                value={canvasState.backgroundColor.gradientThree}
-                onChange={e => onGradientThreeChange(e.target.value)}
-              />
+              <div onClick={handleGradientThreeOpen} className="gradientBtn">
+                <span
+                  style={{
+                    backgroundColor: canvasState.backgroundColor.gradientThree
+                  }}
+                />
+              </div>
             )}
           </div>
           {gradientOneOpen && (
@@ -158,6 +163,23 @@ function LeftControl({
                   color={canvasState.backgroundColor.gradientTwo}
                   onChange={(color, event) => {
                     onGradientTwoChange(color.hex);
+                  }}
+                />
+              </div>
+            </React.Fragment>
+          )}
+          {gradientThreeOpen && (
+            <React.Fragment>
+              <div
+                className="picker-overlay"
+                onClick={() => setGradientThreeOpen(false)}
+              />
+              <div className="pickerContainer">
+                <SwatchesPicker
+                  className="swatchesPicker"
+                  color={canvasState.backgroundColor.gradientOne}
+                  onChange={(color, event) => {
+                    onGradientThreeChange(color.hex);
                   }}
                 />
               </div>
@@ -385,49 +407,51 @@ function LeftControl({
               />
             </div>
           </div>
-          <animated.div style={positionSpringProps}>
-            <Typography variant="h6" align="center">
-              Position
-            </Typography>
-            <div className="positionContainer">
-              <div className="position">
-                <div className="label">
-                  <span>Left</span>
-                  <span>Right</span>
+          {canvasState.image.imgPath !== "" && (
+            <animated.div style={positionSpringProps}>
+              <Typography variant="h6" align="center">
+                Position
+              </Typography>
+              <div className="positionContainer">
+                <div className="position">
+                  <div className="label">
+                    <span>Left</span>
+                    <span>Right</span>
+                  </div>
+                  <Slider
+                    classes={{ root: "xpositionSlider" }}
+                    min={0}
+                    max={20}
+                    step={1}
+                    value={size.args.sliderPositionX}
+                    onChange={(e, value) => {
+                      console.log(value);
+                      imagePositionChange(e, "x", value);
+                    }}
+                    disabled={positionDisabled}
+                  />
                 </div>
-                <Slider
-                  classes={{ root: "xpositionSlider" }}
-                  min={0}
-                  max={20}
-                  step={1}
-                  value={size.args.sliderPositionX}
-                  onChange={(e, value) => {
-                    console.log(value);
-                    imagePositionChange(e, "x", value);
-                  }}
-                  disabled={positionDisabled}
-                />
-              </div>
-              <div className="position">
-                <div className="label">
-                  <span>Bottom</span>
-                  <span>Top</span>
-                </div>
+                <div className="position">
+                  <div className="label">
+                    <span>Bottom</span>
+                    <span>Top</span>
+                  </div>
 
-                <Slider
-                  classes={{ root: "ypositionSlider" }}
-                  min={0}
-                  max={20}
-                  step={1}
-                  value={size.args.sliderPositionY}
-                  onChange={(e, value) => {
-                    imagePositionChange(e, "y", value);
-                  }}
-                  disabled={positionDisabled}
-                />
+                  <Slider
+                    classes={{ root: "ypositionSlider" }}
+                    min={0}
+                    max={20}
+                    step={1}
+                    value={size.args.sliderPositionY}
+                    onChange={(e, value) => {
+                      imagePositionChange(e, "y", value);
+                    }}
+                    disabled={positionDisabled}
+                  />
+                </div>
               </div>
-            </div>
-          </animated.div>
+            </animated.div>
+          )}
 
           <Typography variant="h6" align="center">
             Browse
@@ -451,6 +475,42 @@ function LeftControl({
             imgArgs={canvasState.image.size.args}
             addImageUrl={addImageUrl}
           />
+          {canvasState.image.imgPath !== "" && (
+            <Button
+              classes={{ root: "clearLogoBtn" }}
+              style={{ marginTop: "20px" }}
+              onClick={onClearLogoBtn}
+              color="secondary"
+              variant="contained"
+            >
+              Clear Logo
+            </Button>
+          )}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+      <ExpansionPanel
+        expanded={expanded === "touchups"}
+        onChange={() => handleExpansionChange("touchups")}
+        classes={{ root: "expansionContainer" }}
+      >
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography classes={{ root: "controlContainer" }} variant="h6">
+            TOUCH-UPS
+            <WhatsHot />
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails classes={{ root: "backgroundContainer" }}>
+          <Typography variant="h5" align="center">
+            Text
+          </Typography>
+        </ExpansionPanelDetails>
+        <ExpansionPanelDetails classes={{ root: "backgroundContainer" }}>
+          <Typography variant="h5" align="center">
+            Logo
+          </Typography>
+          <Typography variant="h6" align="left">
+            Box Shadow
+          </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>
 

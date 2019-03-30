@@ -471,6 +471,7 @@ body {
   width: 450px;
   background: #fff;
   border-radius: 2px;
+  border: 5px solid red;
 }
 
 #imgCanvas {

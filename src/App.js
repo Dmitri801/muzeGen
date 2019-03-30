@@ -73,7 +73,6 @@ class App extends Component {
           positionChange: false
         }
       },
-      opacity: null,
       shadow: {
         name: "default",
         offsetX: 3,
@@ -823,6 +822,28 @@ class App extends Component {
     }
   };
 
+  onClearLogoBtn = () => {
+    this.setState({
+      ...this.state,
+      image: {
+        ...this.state.image,
+        imgPath: "",
+        size: {
+          name: "large",
+          args: {
+            width: 300,
+            height: 300,
+            top: 65,
+            left: 75,
+            sliderPositionX: 10,
+            sliderPositionY: 10,
+            positionChange: false
+          }
+        }
+      }
+    });
+  };
+
   onEffectChange = value => {
     this.setState({
       ...this.state,
@@ -1179,6 +1200,7 @@ class App extends Component {
         setBackgroundImageOpacity={this.setBackgroundImageOpacity}
         setBackgroundModeUnsplash={this.setBackgroundModeUnsplash}
         onClearImagesBtn={this.onClearImagesBtn}
+        onClearLogoBtn={this.onClearLogoBtn}
       >
         <Canvas
           canvasState={this.state}
