@@ -8,6 +8,7 @@ import Fab from "@material-ui/core/Fab";
 import Cloud from "@material-ui/icons/Cloud";
 import ConfirmReset from "./ConfirmReset";
 
+
 const RightControl = React.memo(
   ({
     text,
@@ -83,6 +84,7 @@ const RightControl = React.memo(
           handleClose={handleResetClose}
           resetCanvas={onResetBtnClick}
         />
+        <Feedback />
       </div>
     );
   }

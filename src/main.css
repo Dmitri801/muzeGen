@@ -452,6 +452,26 @@ body {
   height: 750px !important;
 }
 
+/* Feedback Modal */
+
+.starContainer {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  align-items: center;
+  height: 200px;
+}
+
+.starIcon {
+  height: 75px !important;
+  width: 75px !important;
+}
+
+.feedbackSubmitContainer {
+  width: 80%;
+  margin: -20px auto 30px auto;
+}
+
 /* Canvas styling  */
 
 .main {
