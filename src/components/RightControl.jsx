@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import Create from "@material-ui/icons/Create";
@@ -6,8 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Fab from "@material-ui/core/Fab";
 import Cloud from "@material-ui/icons/Cloud";
 import ConfirmReset from "./ConfirmReset";
-import Feedback from "./Feedback";
-import React, { useState } from "react";
+
 
 const RightControl = React.memo(
   ({
@@ -54,6 +54,7 @@ const RightControl = React.memo(
             </Typography>
           </ListItem>
         </List>
+
         <div className="download-container">
           <Fab
             onClick={triggerCanvasDownload}
